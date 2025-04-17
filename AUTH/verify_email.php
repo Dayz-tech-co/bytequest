@@ -1,0 +1,61 @@
+<?php
+require "../vendor/autoload.php";
+require "../CONFIG/bytequest_db.php";
+require "../CONFIG/jwt_helper.php";
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+header("Content-Type: application/json");
+
+// 1. Get token from query string
+if (!isset($_GET['token'])) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Verification token missing"
+    ]);
+    exit;
+}
+
+$token = $_GET['token'];
+
+try {
+    // 2. Decode the token
+    $decoded = decode_jwt($token);
+
+    if (!$decoded || !isset($decoded['email'])) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Invalid or expired token"
+        ]);
+        exit;
+    }
+
+    $email = $decoded['email'];
+
+    // 3. Update the database to mark email as verified
+    $stmt = $conn->prepare("UPDATE users SET email_verified = 1 WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+        echo json_encode([
+            "status" => "success",
+            "message" => "Email verified successfully"
+        ]);
+    } else {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Email verification failed or already verified"
+        ]);
+    }
+
+    $stmt->close();
+
+} catch (Exception $e) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Token verification failed",
+        "error" => $e->getMessage()
+    ]);
+}
