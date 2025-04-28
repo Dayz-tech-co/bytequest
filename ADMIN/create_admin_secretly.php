@@ -25,7 +25,7 @@ if ($key !== $secret_key) {
 // }
 
 // Simulate admin data (you can later change this to $_POST if needed)
-$name = "Zayd oduola"; // or get from $_POST
+$name = "oduola"; // or get from $_POST
 $email = "ZaydAdmin@Byte.blog";
 $password = password_hash("admin123", PASSWORD_DEFAULT); // Hashed password
 $role = "admin";
