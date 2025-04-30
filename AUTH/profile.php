@@ -20,7 +20,6 @@ if (!$decoded) {
     echo json_encode(['status' => 'error', 'message' => 'Invalid or expired token']);
     exit;
 }
-
 // Extract user/admin ID
 $user_id = $decoded['id'] ?? $decoded['admin_id'] ?? null;
 $role = $decoded['role'] ?? 'user';

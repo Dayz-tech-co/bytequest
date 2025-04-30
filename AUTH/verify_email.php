@@ -16,8 +16,10 @@ if (!isset($_GET['token'])) {
     ]);
     exit;
 }
-
-$token = $_GET['token'];
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
+$token = clean_input( $_GET['token']);
 
 try {
     // 2. Decode the token

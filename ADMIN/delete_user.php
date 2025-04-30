@@ -1,52 +1,41 @@
-<?php 
-include "../CONFIG/bytequest_db.php";
-header("Content-Type: application/json");
+<?php
+require_once '../CONFIG/bytequest_db.php';
+require_once '../CONFIG/jwt_helper.php';
 
-if ($_SERVER["REQUEST_METHOD"] !=="POST"){
-    echo json_encode([
-        "status" => "error",
-        "message" => "Invalid Request Method.",
-    ]);
-    exit;
-}
-$data = $_POST;
-$admin_id = $_POST["admin_id"] ?? null;
-$id = $_POST["id"] ?? null;
+$headers = apache_request_headers();
+$token = str_replace('Bearer ', '', $headers['Authorization'] ?? '');
+$decoded = decode_jwt($token);
 
-if (!$admin_id || !$id){
-    echo json_encode([
-        "status"  => "error",
-        "message" => "Both fields (admin id and user id) Are Required",
-    ]);
-    exit;
-}
-// Verify admin exists
-
-$admin_stmt=$conn->prepare("SELECT * FROM admins WHERE admin_id = ?");
-$admin_stmt->bind_param("i", $admin_id);
-$admin_stmt->execute();
-$admin_result=$admin_stmt->get_result();
-
-if ($admin_result->num_rows===0){
-    echo json_encode([
-        "status" => "error",
-        "message" => "Unauthorised: Admin not found."
-    ]);
+if (!$decoded || $decoded['role'] !== 'admin') {
+    echo json_encode(["error" => "Unauthorized"]);
     exit;
 }
 
-// Delete user
-$delete_stmt=$conn->prepare("DELETE FROM users WHERE id = ? ");
-$delete_stmt->bind_param("i", $id);
-if ($delete_stmt->execute()){
-    echo json_encode([
-        "status" => "success",
-        "message" => "User Deleted Successfully."
-    ]);
-} else {
-    echo json_encode([
-        "status"=> "error",
-        "message" => "Failed to Delete User"
-    ]);
+$admin_id = $decoded['admin_id'];
+
+// Validate user_id to delete
+$user_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : null;
+
+if (!$user_id) {
+    echo json_encode(["error" => "User ID is required"]);
+    exit;
 }
+
+// Check if user exists before deletion
+$stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$res = $stmt->get_result();
+
+if ($res->num_rows === 0) {
+    echo json_encode(["error" => "User not found"]);
+    exit;
+}
+
+// Proceed to delete
+$del = $conn->prepare("DELETE FROM users WHERE id = ?");
+$del->bind_param("i", $user_id);
+$del->execute();
+
+echo json_encode(["message" => "User deleted successfully"]);
 ?>

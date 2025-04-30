@@ -3,8 +3,8 @@ include "../CONFIG/bytequest_db.php";
 header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
-$email = $data["email"] ?? '';
-$otp = $data["otp"] ?? '';
+$email = clean_input($data["email"] ?? '');
+$otp = clean_input($data["otp"] ?? '');
 
 if (empty($email) || empty($otp)) {
     echo json_encode(["status" => "error", "message" => "Email and OTP are required."]);
@@ -29,3 +29,4 @@ if (strtotime($row["otp_expiry"]) < time()) {
 }
 
 echo json_encode(["status" => "success", "message" => "OTP verified Successfully. You can now proceed to update your password"]);
+?>

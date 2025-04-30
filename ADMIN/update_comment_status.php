@@ -1,57 +1,59 @@
 <?php
-header('Content-Type: application/json');
-include "../CONFIG/bytequest_db.php";
+require_once "../CONFIG/bytequest_db.php";
+require_once "../CONFIG/jwt_helper.php";
 
-// Debugging: Uncomment to view the raw POST
-// echo '<pre>'; print_r($_POST); echo '</pre>'; exit;
+header("Content-Type: application/json");
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Invalid request method.'
-    ]);
+// 1. Authorization Header Check
+$headers = apache_request_headers();
+if (!isset($headers['Authorization'])) {
+    echo json_encode(["status" => "error", "message" => "Authorization token not found."]);
+    exit;
+}
+$token = str_replace("Bearer ", "", $headers["Authorization"]);
+$decoded = decode_jwt($token);
+
+if (!$decoded || isset($decoded["error"]) || $decoded["role"] !== "admin") {
+    echo json_encode(["status" => "error", "message" => "Unauthorized access. Admin only."]);
     exit;
 }
 
-$comment_id = isset($_POST['comment_id']) ? $_POST['comment_id'] : null;
-$status = isset($_POST['status']) ? $_POST['status'] : null;
-$admin_id = isset($_POST['admin_id']) ? $_POST['admin_id'] : null;
+$admin_id = $decoded["admin_id"];
 
-if (!$comment_id || !$status || !$admin_id) {
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'All fields (comment_id, status, admin_id) are required.'
-    ]);
+// 2. Input Handling
+$comment_id = clean_input($_POST["comment_id"] ?? '');
+$status = clean_input($_POST["status"] ?? '');
+
+if (!$comment_id || !$status) {
+    echo json_encode(["status" => "error", "message" => "Comment ID and status are required."]);
     exit;
 }
 
-// Check if admin exists
-$admin_query = $conn->prepare("SELECT * FROM admins WHERE admin_id = ?");
-$admin_query->bind_param("i", $admin_id);
-$admin_query->execute();
-$admin_result = $admin_query->get_result();
-
-if ($admin_result->num_rows === 0) {
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Access denied. Only admins can update comment status.'
-    ]);
+// 3. Status Validation (comments only)
+$valid_statuses = ['pending', 'approved', 'rejected'];
+if (!in_array($status, $valid_statuses)) {
+    echo json_encode(["status" => "error", "message" => "Invalid status. Must be 'pending', 'approved', or 'rejected'."]);
     exit;
 }
 
-// Update comment status
-$update_query = $conn->prepare("UPDATE comments SET status = ? WHERE comment_id = ?");
-$update_query->bind_param("si", $status, $comment_id);
+// 4. Check if the comment exists
+$stmt = $conn->prepare("SELECT * FROM comments WHERE comment_id = ?");
+$stmt->bind_param("i", $comment_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if ($update_query->execute()) {
-    echo json_encode([
-        'status' => 'success',
-        'message' => 'Comment status updated successfully.'
-    ]);
+if ($result->num_rows === 0) {
+    echo json_encode(["status" => "error", "message" => "Comment not found."]);
+    exit;
+}
+
+// 5. Update comment status
+$update = $conn->prepare("UPDATE comments SET status = ? WHERE comment_id = ?");
+$update->bind_param("si", $status, $comment_id);
+
+if ($update->execute()) {
+    echo json_encode(["status" => "success", "message" => "Comment status updated successfully."]);
 } else {
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Failed to update comment status.'
-    ]);
+    echo json_encode(["status" => "error", "message" => "Failed to update comment."]);
 }
 ?>

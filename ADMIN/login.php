@@ -11,8 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-$email = $data["email"] ?? '';
-$password = $data["password"] ?? '';
+$email = clean_input($data["email"] ?? '');
+$password = clean_input( $data["password"] ?? '');
 
 if (empty($email) || empty($password)) {
     echo json_encode(["status" => "error", "message" => "Email and password are required."]);
@@ -37,15 +37,6 @@ if (!password_verify($password, $admin["password"])) {
     echo json_encode(["status" => "error", "message" => "Incorrect password."]);
     exit;
 }
-
-// Generate JWT with correct payload
-$payload = [
-    "admin_id" => $admin["admin_id"],
-    "email" => $admin["email"],
-    "role" => $admin["role"],  // Dynamically include role from database
-    "iat" => time(),           // Issued at time
-    "exp" => time() + (60 * 60) // Expiry time (1 hour)
-];
 
 
 // Generate JWT with correct payload

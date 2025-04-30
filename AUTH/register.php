@@ -2,12 +2,17 @@
 include "../CONFIG/bytequest_db.php";
 header("Content-Type: application/json");
 
+
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
+
 // Retrieve user credentials
-$name = $_POST["name"] ?? null;
-$username = $_POST["username"] ?? null;
-$email = $_POST["email"] ?? null;
-$password = $_POST["password"] ?? null;
-$role = $_POST["role"] ?? null;
+$email = clean_input($_POST['email']);
+$password = trim($_POST['password']); // password: trim only, no htmlspecialchars
+$name = clean_input($_POST['name']);
+$username= clean_input($_POST["username"]);
+$role = clean_input($_POST["role"]);
 
 if (!$name || !$username || !$email || !$password || !$role){
     echo json_encode(["status" => "error", "message" => "All fields are required."]);

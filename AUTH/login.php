@@ -4,9 +4,14 @@ require_once '../CONFIG/jwt_helper.php';
 
 header("Content-Type: application/json");
 
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
+
 $data = json_decode(file_get_contents("php://input"), true);
-$email = $data['email'] ?? '';
-$password = $data['password'] ?? '';
+$email = clean_input($_POST['email']);
+$password = trim($_POST['password']); // password: trim only, no htmlspecialchars
+
 
 if (!$email || !$password) {
     echo json_encode(['status' => 'error', 'message' => 'Email and password required']);

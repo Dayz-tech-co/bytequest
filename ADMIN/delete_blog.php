@@ -10,9 +10,12 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST"){
     ]);
     exit;
 }
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 
-$blog_id = $_POST["blog_id"] ?? null;
-$admin_id = $_POST["admin_id"] ?? null;
+$blog_id = clean_input( $_POST["blog_id"]);
+$admin_id = $decoded["admin_id"];
 
 if (!$blog_id || !$admin_id){
     echo json_encode([

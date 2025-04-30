@@ -2,6 +2,7 @@
 include "../CONFIG/bytequest_db.php";
 header("Content-Type: application/json");
 
+// 1. Ensure the request method is POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     echo json_encode([
         "status" => "error",
@@ -10,11 +11,13 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-$admin_id = $_POST["admin_id"] ?? null;
-$status = $_POST["status"] ?? null; // user account status (active, suspended, banned, etc.)
-$role = $_POST["role"] ?? null;     // user role (user or admin)
-$id = $_POST["id"] ?? null;         // user ID
+// 2. Get and validate inputs
+$admin_id = clean_input($decoded["admin_id"] ?? null);
+$status = clean_input($_POST["status"] ?? null);  // user account status (active, suspended, banned)
+$role = clean_input($_POST["role"] ?? null);      // user role (user or admin)
+$id = clean_input($_POST["id"] ?? null);          // user ID
 
+// Check if all fields are provided
 if (!$admin_id || !$status || !$role || !$id) {
     echo json_encode([
         "status" => "error",
@@ -23,7 +26,25 @@ if (!$admin_id || !$status || !$role || !$id) {
     exit;
 }
 
-// Validate admin
+// 3. Validate status field (must be one of 'active', 'suspended', or 'banned')
+if (!in_array($status, ['active', 'suspended', 'banned'])) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Invalid status. Allowed values are 'active', 'suspended', or 'banned'."
+    ]);
+    exit;
+}
+
+// 4. Validate role field (must be either 'user' or 'admin')
+if (!in_array($role, ['user', 'admin'])) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Invalid role. Allowed values are 'user' or 'admin'."
+    ]);
+    exit;
+}
+
+// 5. Validate admin authentication
 $admin_stmt = $conn->prepare("SELECT * FROM admins WHERE admin_id = ?");
 $admin_stmt->bind_param("i", $admin_id);
 $admin_stmt->execute();
@@ -46,7 +67,7 @@ if ($admin_data["role"] !== "admin") {
     exit;
 }
 
-// Validate user existence
+// 6. Validate user existence
 $user_stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
 $user_stmt->bind_param("i", $id);
 $user_stmt->execute();
@@ -60,7 +81,7 @@ if ($user_result->num_rows === 0) {
     exit;
 }
 
-// Update user's status and role
+// 7. Update user's status and role in the database
 $update_stmt = $conn->prepare("UPDATE users SET status = ?, role = ? WHERE id = ?");
 $update_stmt->bind_param("ssi", $status, $role, $id);
 

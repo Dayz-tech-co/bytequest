@@ -3,8 +3,8 @@ include "../CONFIG/bytequest_db.php";
 header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
-$email = $data["email"] ?? "";
-$password = $data["password"] ?? "";
+$email = clean_input($data["email"] ?? "");
+$password = clean_input( $data["password"] ?? "");
 
 if (empty ($email) || empty ($password)){
      echo json_encode([

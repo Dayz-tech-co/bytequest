@@ -12,10 +12,12 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     ]);
     exit;
 }
-
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 // Get POST data
-$admin_id = $_POST['admin_id'] ?? null;
-$comment_id = $_POST['comment_id'] ?? null;
+$admin_id = $decoded["admin_id"];
+$comment_id = clean_input($_POST['comment_id']);
 
 // Check for required fields
 if (!$admin_id || !$comment_id) {

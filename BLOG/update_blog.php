@@ -4,10 +4,10 @@ header("Content-Type: application/json");
 
 // Get the data from the POST request
 
-$blog_id = $_POST["blog_id"] ?? null;
-$title = $_POST["title"] ?? null;
-$content = $_POST["content"] ?? null;
-$image = $_POST["image"] ?? null;
+$blog_id = clean_input($_POST["blog_id"] ?? null);
+$title = clean_input($_POST["title"] ?? null);
+$content = clean_input($_POST["content"] ?? null);
+$image = clean_input($_POST["image"] ?? null);
 // Check if blog_id, title, and content are provided
 
 if (!$blog_id || !$title || !$content){
@@ -18,7 +18,7 @@ if (!$blog_id || !$title || !$content){
     exit;
 }
 
-$image = $_POST["image"] ?? null;  // Ensure $image is null if not provided
+$image = clean_input($_POST["image"] ?? null);  // Ensure $image is null if not provided
 
 // Handle the case where image is empty
 if ($image === "") {

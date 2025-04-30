@@ -1,11 +1,13 @@
 <?php
 require_once '../CONFIG/bytequest_db.php';
 header("Content-Type: application/json");
-
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 // Receive POST data
-$name = $_POST['name'] ?? null;
-$email = $_POST['email'] ?? null;
-$password = $_POST['password'] ?? null;
+$name = clean_input( $_POST['name']);
+$email = clean_input( $_POST['email']);
+$password = clean_input($_POST['password']);
 $role = "admin";  // Default role for admin
 
 // Validate input data

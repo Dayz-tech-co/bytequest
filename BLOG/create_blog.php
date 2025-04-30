@@ -4,10 +4,10 @@ include "../CONFIG/bytequest_db.php";
 
 header("Content-Type: application/json");
 
-$title = $_POST["title"] ?? null;
-$content = $_POST["content"] ?? null;
-$image = $_POST["image"] ?? null;//  This can be optional shaa
-$author_id = $_POST["author_id"] ?? null;
+$title = clean_input( $_POST["title"] ?? null);
+$content = clean_input($_POST["content"] ?? null);
+$image = clean_input($_POST["image"] ?? null);//  This can be optional shaa
+$author_id = clean_input($_POST["author_id"] ?? null);
 // Check if the required data is being provided
 if (!$title || !$content || !$author_id){
     echo json_encode(["status" => "error", "message" => "All Fields are required."]);

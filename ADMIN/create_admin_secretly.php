@@ -1,9 +1,11 @@
 <?php
 require_once '../CONFIG/bytequest_db.php';
 header("Content-Type: application/json");
+require_once '../CONFIG/bootstrap.php';
+
 
 // Set a secret key for security
-$secret_key = "ByteQuestSecretAdmin2025"; // You can customize this
+ $secret_key = $_ENV["JWT_SECRET"];
 
 // Validate the secret key from the request
 $key = $_GET['key'] ?? null;

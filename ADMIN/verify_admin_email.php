@@ -17,7 +17,7 @@ if (!isset($_GET['token'])) {
     exit;
 }
 
-$token = $_GET['token'];
+$token = clean_input( $_GET['token']);
 
 try {
     // 2. Decode the token

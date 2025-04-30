@@ -4,7 +4,7 @@ include "../CONFIG/bytequest_db.php";
 header("Content-Type: application/json");
 
 // Get blog_id from the query parameter
-$blog_id = $_GET['blog_id'] ?? null;
+$blog_id = clean_input( $_GET['blog_id'] ?? null);
 
 if (!$blog_id) {
     echo json_encode([

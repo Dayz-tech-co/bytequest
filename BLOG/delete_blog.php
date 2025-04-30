@@ -4,7 +4,7 @@ include "../CONFIG/bytequest_db.php";
 header("Content-Type: application/json");
 
 // Get blog_id from the request
-$blog_id = $_GET['blog_id'] ?? null;
+$blog_id = clean_input($_GET['blog_id'] ?? null);
 
 // Check if blog_id is provided
 if (!$blog_id) {
