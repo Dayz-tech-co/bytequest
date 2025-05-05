@@ -1,5 +1,7 @@
 <?php 
-include "./CONFIG/bootstrap.php";
+require_once "../CONFIG/bootstrap.php";
+
+require_once "../CONFIG/functions.php";
 
 header( "Content-Type: application/json");
 
@@ -9,9 +11,6 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST"){
         "message" => "Invalid request method."
     ]);
     exit;
-}
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
 }
 
 $blog_id = clean_input( $_POST["blog_id"]);

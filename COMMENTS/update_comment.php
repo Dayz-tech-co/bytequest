@@ -1,5 +1,7 @@
 <?php 
-include "./CONFIG/bootstrap.php";
+require_once "../CONFIG/bootstrap.php";
+require_once "../CONFIG/functions.php";
+
 header("Content-Type: application/json");
 
 $comment_id = $_POST["comment_id"] ?? null;

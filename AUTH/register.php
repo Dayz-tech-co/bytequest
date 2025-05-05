@@ -1,11 +1,8 @@
 <?php 
-include "./CONFIG/bootstrap.php";
+require_once "../CONFIG/bootstrap.php";
+require_once "../CONFIG/functions.php";
+
 header("Content-Type: application/json");
-
-
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
 
 // Retrieve user credentials
 $email = clean_input($_POST['email']);

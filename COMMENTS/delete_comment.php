@@ -1,5 +1,6 @@
 <?php
 include "./CONFIG/bootstrap.php";
+require_once "../CONFIG/functions.php";
 
 header("Content-Type: application/json");
 

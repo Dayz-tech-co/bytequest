@@ -65,7 +65,7 @@ $totalPages = ceil($totalUsers / $limit);
 
 // 8. Respond with data
 echo json_encode([
-    "status" => "false",
+    "status" => "true",
     "message" => "Users fetched successfully",
     "current_page" => $page,
     "per_page" => $limit,

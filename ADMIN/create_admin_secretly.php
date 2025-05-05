@@ -1,7 +1,8 @@
 <?php
 require_once '../CONFIG/bootstrap.php';
+
 header("Content-Type: application/json");
-require_once '../CONFIG/bootstrap.php';
+
 
 
 // Set a secret key for security

@@ -1,6 +1,7 @@
 <?php
 require_once "./CONFIG/bootstrap.php";
 require_once "../CONFIG/jwt_helper.php";
+require_once "../CONFIG/functions.php";
 
 header("Content-Type: application/json");
 
@@ -20,9 +21,6 @@ if (!$decoded || isset($decoded["error"]) || $decoded["role"] !== "admin") {
 
 $admin_id = $decoded["admin_id"];
 
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
 // 2. Input Handling
 $comment_id = clean_input($_POST["comment_id"] ?? '');
 $status = clean_input($_POST["status"] ?? '');

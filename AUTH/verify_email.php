@@ -2,6 +2,7 @@
 require "../vendor/autoload.php";
 require "./CONFIG/bootstrap.php";
 require "../CONFIG/jwt_helper.php";
+require "../CONFIG/functions.php";
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -15,9 +16,6 @@ if (!isset($_GET['token'])) {
         "message" => "Verification token missing"
     ]);
     exit;
-}
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
 }
 $token = clean_input( $_GET['token']);
 

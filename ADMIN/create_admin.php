@@ -1,18 +1,27 @@
 <?php
 require_once '../CONFIG/bootstrap.php';
 header("Content-Type: application/json");
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
-// Receive POST data
-$name = clean_input( $_POST['name']);
-$email = clean_input( $_POST['email']);
-$password = clean_input($_POST['password']);
-$role = "admin";  // Default role for admin
 
-// Validate input data
-if (!$name || !$email || !$password) {
-    echo json_encode(["status" => "false", "message" => "All fields are required."]);
+
+
+$headers = apache_request_headers();
+$authHeader = $headers['Authorization'] ?? '';
+
+// You might store tokens in a table `admin_tokens` or similar
+if (empty($authHeader)) {
+    echo json_encode(['status' => 'false', 'message' => 'Unauthorized. No token provided.']);
+    exit;
+}
+
+$token = trim(str_replace('Bearer', '', $authHeader));
+
+$verify_token_stmt = $conn->prepare("SELECT admin_id FROM admin_tokens WHERE token = ?");
+$verify_token_stmt->bind_param("s", $token);
+$verify_token_stmt->execute();
+$verify_result = $verify_token_stmt->get_result();
+
+if ($verify_result->num_rows === 0) {
+    echo json_encode(['status' => 'false', 'message' => 'Unauthorized. Invalid token.']);
     exit;
 }
 

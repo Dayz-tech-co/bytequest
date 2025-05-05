@@ -1,11 +1,10 @@
 <?php 
 require_once "./CONFIG/bootstrap.php";
+require_once "../CONFIG/functions.php";
 
 header("Content-Type: application/json");
 
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
+
 
 $email = clean_input(trim($_POST["email"]));
 $otp = clean_input(trim($_POST["otp"]));

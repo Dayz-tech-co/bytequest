@@ -1,12 +1,12 @@
 <?php 
-include "./CONFIG/bootstrap.php";
+require_once "../CONFIG/bootstrap.php";
+require_once "../CONFIG/functions.php";
+
 header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
+
 $email = clean_input($data["email"] ?? "");
 $password = clean_input( $data["password"] ?? "");
 

@@ -1,12 +1,9 @@
 <?php
 
 include "./CONFIG/bootstrap.php";
-
+require_once "../CONFIG/functions.php";
 header("Content-Type: application/json");
 
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
 $title = clean_input( $_POST["title"] ?? null);
 $content = clean_input($_POST["content"] ?? null);
 $image = clean_input($_POST["image"] ?? null);//  This can be optional shaa

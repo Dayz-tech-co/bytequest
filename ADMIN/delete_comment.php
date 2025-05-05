@@ -1,5 +1,8 @@
 <?php
-include "./CONFIG/bootstrap.php";
+require_once "../CONFIG/bootstrap.php";
+
+require_once "../CONFIG/functions.php";
+
 header("Content-Type: application/json");
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -11,9 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
         "message" => "Invalid Request Method."
     ]);
     exit;
-}
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
 }
 // Get POST data
 $admin_id = $decoded["admin_id"];

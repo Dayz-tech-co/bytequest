@@ -1,5 +1,7 @@
 <?php  
-include "./CONFIG/bootstrap.php";
+require_once "../CONFIG/bootstrap.php";
+require_once "../CONFIG/functions.php";
+
 header("Content-Type: application/json");
 
 // 1. Ensure the request method is POST
@@ -11,9 +13,6 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
 // 2. Get and validate inputs
 $admin_id = clean_input($decoded["admin_id"] ?? null);
 $status = clean_input($_POST["status"] ?? null);  // user account status (active, suspended, banned)

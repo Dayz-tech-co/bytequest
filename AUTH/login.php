@@ -1,12 +1,9 @@
 <?php
 require_once './CONFIG/bootstrap.php';
 require_once '../CONFIG/jwt_helper.php';
+require_once "../CONFIG/functions.php";
 
 header("Content-Type: application/json");
-
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
 
 $data = json_decode(file_get_contents("php://input"), true);
 $email = clean_input($_POST['email']);

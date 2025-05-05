@@ -1,5 +1,6 @@
 <?php
-include './CONFIG/bootstrap.php';
+require_once '../CONFIG/bootstrap.php';
+require_once "../CONFIG/functions.php";
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -9,9 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ]);
     exit;
 }
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
+
 $blog_id = clean_input($_POST['blog_id'] ?? '');
 $title = clean_input($_POST['title'] ?? '');
 $content = clean_input($_POST['content'] ?? '');

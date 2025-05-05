@@ -1,6 +1,7 @@
 <?php
 require_once './CONFIG/bootstrap.php';
 require_once '../CONFIG/jwt_helper.php';
+require_once "../CONFIG/functions.php";
 
 $headers = apache_request_headers();
 $token = str_replace('Bearer ', '', $headers['Authorization'] ?? '');
@@ -10,9 +11,7 @@ if (!$decoded || $decoded['role'] !== 'admin') {
     echo json_encode(["error" => "Unauthorized"]);
     exit;
 }
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
+
 $admin_id = $decoded['admin_id'];
 
 // Validate user_id to delete

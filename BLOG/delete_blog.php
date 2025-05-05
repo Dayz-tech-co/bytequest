@@ -1,11 +1,8 @@
 <?php
 include "./CONFIG/bootstrap.php";
-
+require_once "../CONFIG/functions.php";
 header("Content-Type: application/json");
 
-function clean_input($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
-}
 // Get blog_id from the request
 $blog_id = clean_input($_GET['blog_id'] ?? null);
 

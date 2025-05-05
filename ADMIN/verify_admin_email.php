@@ -2,6 +2,7 @@
 require "../vendor/autoload.php";
 require "./CONFIG/bootstrap.php";
 require "../CONFIG/jwt_helper.php";
+require_once "../CONFIG/functions.php";
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
