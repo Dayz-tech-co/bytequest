@@ -1,5 +1,5 @@
 <?php 
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 header("Content-Type: application/json");
 
 $comment_id = $_POST["comment_id"] ?? null;
@@ -7,7 +7,7 @@ $comment = $_POST["comment"] ?? null;
 
 if(!$comment_id || !$comment) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "All Fields (comment id and comment text) Are Required."
     ]);
     exit;
@@ -18,12 +18,12 @@ $stmt->bind_param("si", $comment, $comment_id);
 
 if ($stmt->execute()){
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Comment updated successfully."
     ]);
 } else {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to update comment."
     ]);
 }

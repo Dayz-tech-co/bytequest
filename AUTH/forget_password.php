@@ -1,7 +1,10 @@
 <?php 
-require_once "../CONFIG/bytequest_db.php";
+require_once "./CONFIG/bootstrap.php";
 
 header("Content-Type: application/json");
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 
 $email = clean_input(trim($_POST["email"]) );
 
@@ -24,13 +27,13 @@ if($result->num_rows===1){
     $insert->execute();
 
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Otp sent",
         "otp" => $otp,
     ]); 
 } else {
     json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to send otp Due to email not found."
     ]);
 }

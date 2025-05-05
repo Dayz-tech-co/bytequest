@@ -1,15 +1,18 @@
 <?php
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 
 header("Content-Type: application/json");
 
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 // Get blog_id from the request
 $blog_id = clean_input($_GET['blog_id'] ?? null);
 
 // Check if blog_id is provided
 if (!$blog_id) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "blog_id is required."
     ]);
     exit;
@@ -23,18 +26,18 @@ $stmt->bind_param("i", $blog_id);  // Bind the blog_id as integer
 if ($stmt->execute()) {
     if ($stmt->affected_rows > 0) {
         echo json_encode([
-            "status" => "success",
+            "status" => "true",
             "message" => "Blog deleted successfully."
         ]);
     } else {
         echo json_encode([
-            "status" => "error",
+            "status" => "false",
             "message" => "Blog not found or already deleted."
         ]);
     }
 } else {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to delete blog."
     ]);
 }

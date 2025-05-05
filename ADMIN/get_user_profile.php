@@ -1,5 +1,5 @@
 <?php
-require_once '../CONFIG/bytequest_db.php';
+require_once './CONFIG/bootstrap.php';
 require_once '../CONFIG/jwt_helper.php';
 
 header("Content-Type: application/json");
@@ -40,7 +40,7 @@ if ($result->num_rows === 0) {
 } else {
     $user = $result->fetch_assoc();
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "User profile retrieved",
         "data" => $user
     ]);

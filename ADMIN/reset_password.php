@@ -1,14 +1,18 @@
 <?php 
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
+
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 $email = clean_input($data["email"] ?? "");
 $password = clean_input( $data["password"] ?? "");
 
 if (empty ($email) || empty ($password)){
      echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Email and Password are both required."
      ]);
      exit;
@@ -19,12 +23,12 @@ $stmt->bind_param("ss", $hashed_password, $email);
 
 if ($stmt->execute()){
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Password reset successful",
     ]);
 } else {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to Update Password",
     ]);
 }

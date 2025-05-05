@@ -1,14 +1,17 @@
 <?php
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 
 header("Content-Type: application/json");
 
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 // Get blog_id from the query parameter
 $blog_id = clean_input( $_GET['blog_id'] ?? null);
 
 if (!$blog_id) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Blog ID is required."
     ]);
     exit;
@@ -25,19 +28,19 @@ if ($stmt->execute()) {
     if ($result->num_rows > 0) {
         $blog = $result->fetch_assoc();
         echo json_encode([
-            "status" => "success",
+            "status" => "true",
             "message" => "Blog fetched successfully.",
             "data" => $blog
         ]);
     } else {
         echo json_encode([
-            "status" => "error",
+            "status" => "false",
             "message" => "No blog found with the provided ID."
         ]);
     }
 } else {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to fetch blog post."
     ]);
 }

@@ -1,5 +1,5 @@
 <?php
-require_once '../CONFIG/bytequest_db.php';
+require_once './CONFIG/bootstrap.php';
 require_once '../CONFIG/jwt_helper.php';
 
 header("Content-Type: application/json");
@@ -9,7 +9,7 @@ $headers = apache_request_headers();
 $authHeader = $headers['Authorization'] ?? '';
 
 if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-    echo json_encode(['status' => 'error', 'message' => 'Token missing']);
+    echo json_encode(['status' => 'false', 'message' => 'Token missing']);
     exit;
 }
 
@@ -17,7 +17,7 @@ $token = str_replace('Bearer ', '', $authHeader);
 $decoded = decode_jwt($token);
 
 if (!$decoded) {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid or expired token']);
+    echo json_encode(['status' => 'false', 'message' => 'Invalid or expired token']);
     exit;
 }
 // Extract user/admin ID
@@ -25,7 +25,7 @@ $user_id = $decoded['id'] ?? $decoded['admin_id'] ?? null;
 $role = $decoded['role'] ?? 'user';
 
 if (!$user_id) {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid token: ID not found']);
+    echo json_encode(['status' => 'false', 'message' => 'Invalid token: ID not found']);
     exit;
 }
 
@@ -42,7 +42,7 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
 if ($user) {
-    echo json_encode(['status' => 'success', 'data' => $user]);
+    echo json_encode(['status' => 'true', 'data' => $user]);
 } else {
-    echo json_encode(['status' => 'error', 'message' => ucfirst($role) . ' not found']);
+    echo json_encode(['status' => 'false', 'message' => ucfirst($role) . ' not found']);
 }

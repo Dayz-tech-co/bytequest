@@ -1,5 +1,5 @@
 <?php 
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 
 header("Content-Type: application/json");
 
@@ -11,7 +11,7 @@ $comment = clean_input($_POST["comment"] ?? null);
 // Check if blog_id, author_id, and comment_text are provided
 if (!$blog_id || !$author_id || !$comment) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "blog_id, author_id, and comment are required.",
     ]);
     exit;
@@ -24,12 +24,12 @@ $stmt->bind_param("iis", $blog_id, $author_id, $comment);
 // Execute the query
 if ($stmt->execute()) {
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Comment created successfully."
     ]);
 } else {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to create comment."
     ]);
 }

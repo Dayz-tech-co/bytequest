@@ -1,5 +1,5 @@
 <?php
-require_once '../CONFIG/bytequest_db.php';
+require_once './CONFIG/bootstrap.php';
 require_once '../CONFIG/jwt_helper.php';
 
 header("Content-Type: application/json");
@@ -14,7 +14,7 @@ $password = trim($_POST['password']); // password: trim only, no htmlspecialchar
 
 
 if (!$email || !$password) {
-    echo json_encode(['status' => 'error', 'message' => 'Email and password required']);
+    echo json_encode(['status' => 'false', 'message' => 'Email and password required']);
     exit;
 }
 
@@ -26,7 +26,7 @@ $user = $result->fetch_assoc();
 
 if ($user && password_verify($password, $user['password'])) {
     $token = generate_jwt($user['id'], $user['role']);
-    echo json_encode(['status' => 'success', 'token' => $token]);
+    echo json_encode(['status' => 'true', 'token' => $token]);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid credentials']);
 }

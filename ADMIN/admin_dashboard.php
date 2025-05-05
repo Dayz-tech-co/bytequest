@@ -1,6 +1,6 @@
 <?php
 require "../vendor/autoload.php";
-require "../CONFIG/bytequest_db.php";
+require "../CONFIG/bootstrap.php";
 require "../CONFIG/jwt_helper.php"; // Contains SECRET_KEY constant
 
 use Firebase\JWT\JWT;
@@ -14,7 +14,7 @@ $headers = apache_request_headers();
 // Check for Authorization token
 if (!isset($headers['Authorization'])) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Authorization token missing"
     ]);
     exit;
@@ -29,7 +29,7 @@ try {
 
     if ($decoded === null) {
         echo json_encode([
-            "status" => "error",
+            "status" => "false",
             "message" => "Invalid or expired token"
         ]);
         exit;
@@ -38,7 +38,7 @@ try {
     // Check if the role is admin
     if (!isset($decoded['role']) || $decoded['role'] !== 'admin') {
         echo json_encode([
-            "status" => "error",
+            "status" => "false",
             "message" => "Access denied: Admins only"
         ]);
         exit;
@@ -46,7 +46,7 @@ try {
 
     // All good, welcome admin!
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Welcome to Admin Dashboard",
         "admin" => [
             "admin_id" => $decoded['admin_id'], // Corrected to 'admin_id'
@@ -57,7 +57,7 @@ try {
 
 } catch (Exception $e) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Invalid or expired token",
         "error" => $e->getMessage()
     ]);

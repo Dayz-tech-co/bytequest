@@ -1,15 +1,18 @@
 <?php 
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 
 header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
 
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 $email = clean_input($_POST["email"]);
 
 if (empty($email)){
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Email is required."
     ]);
     exit;
@@ -23,7 +26,7 @@ $result=$stmt->get_result();
 
 if ($result->num_rows === 0){
     echo json_encode([
-        "status"=> "error",
+        "status"=> "false",
         "message" => "Admin not found."
     ]);
     exit;
@@ -37,7 +40,7 @@ $update_stmt->bind_param("s", $email);
 $update_stmt->execute();
 
 echo json_encode([
-    "status" => "success",
+    "status" => "true",
     "message" => "OTP sent to admin email.",
     "otp" => $otp  
 ]);

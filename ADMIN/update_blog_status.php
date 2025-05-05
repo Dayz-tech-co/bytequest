@@ -1,15 +1,17 @@
 <?php
-include '../CONFIG/bytequest_db.php';
+include './CONFIG/bootstrap.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
-        'status' => 'error',
+        'status' => 'false',
         'message' => 'Invalid request method.'
     ]);
     exit;
 }
-
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 $blog_id = clean_input($_POST['blog_id'] ?? '');
 $title = clean_input($_POST['title'] ?? '');
 $content = clean_input($_POST['content'] ?? '');
@@ -17,7 +19,7 @@ $status = clean_input($_POST['status'] ?? '');
 
 if (empty($blog_id) || empty($title) || empty($content)) {
     echo json_encode([
-        'status' => 'error',
+        'status' => 'false',
         'message' => 'blog_id, title, and content are required.'
     ]);
     exit;
@@ -31,7 +33,7 @@ $blog_result = $check_blog->get_result();
 
 if ($blog_result->num_rows === 0) {
     echo json_encode([
-        'status' => 'error',
+        'status' => 'false',
         'message' => 'Blog not found.'
     ]);
     exit;
@@ -57,12 +59,12 @@ if ($status === 'deleted') {
 
     if ($delete_blog->execute()) {
         echo json_encode([
-            'status' => 'success',
+            'status' => 'true',
             'message' => 'Blog and its comments deleted successfully.'
         ]);
     } else {
         echo json_encode([
-            'status' => 'error',
+            'status' => 'false',
             'message' => 'Failed to delete the blog.'
         ]);
     }
@@ -73,12 +75,12 @@ if ($status === 'deleted') {
 
     if ($update_blog->execute()) {
         echo json_encode([
-            'status' => 'success',
+            'status' => 'true',
             'message' => 'Blog updated successfully.'
         ]);
     } else {
         echo json_encode([
-            'status' => 'error',
+            'status' => 'false',
             'message' => 'Failed to update blog.'
         ]);
     }

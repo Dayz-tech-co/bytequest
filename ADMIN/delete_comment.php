@@ -1,5 +1,5 @@
 <?php
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 header("Content-Type: application/json");
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 // Validate request
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Invalid Request Method."
     ]);
     exit;
@@ -22,7 +22,7 @@ $comment_id = clean_input($_POST['comment_id']);
 // Check for required fields
 if (!$admin_id || !$comment_id) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Missing required parameters."
     ]);
     exit;
@@ -36,7 +36,7 @@ $admin_result = $admin_stmt->get_result();
 
 if ($admin_result->num_rows === 0) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Unauthorized: admin not found."
     ]);
     exit;
@@ -48,12 +48,12 @@ $delete_stmt->bind_param("i", $comment_id);
 
 if ($delete_stmt->execute()) {
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Comment deleted successfully."
     ]);
 } else {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to delete comment."
     ]);
 }

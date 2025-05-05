@@ -1,6 +1,6 @@
 <?php
 require "../vendor/autoload.php";
-require "../CONFIG/bytequest_db.php";
+require "./CONFIG/bootstrap.php";
 require "../CONFIG/jwt_helper.php";
 
 use Firebase\JWT\JWT;
@@ -11,7 +11,7 @@ header("Content-Type: application/json");
 // 1. Get token from query string
 if (!isset($_GET['token'])) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Verification token missing"
     ]);
     exit;
@@ -27,7 +27,7 @@ try {
 
     if (!$decoded || !isset($decoded['email'])) {
         echo json_encode([
-            "status" => "error",
+            "status" => "false",
             "message" => "Invalid or expired token"
         ]);
         exit;
@@ -42,12 +42,12 @@ try {
 
     if ($stmt->affected_rows > 0) {
         echo json_encode([
-            "status" => "success",
+            "status" => "true",
             "message" => "Email verified successfully"
         ]);
     } else {
         echo json_encode([
-            "status" => "error",
+            "status" => "false",
             "message" => "Email verification failed or already verified"
         ]);
     }
@@ -56,7 +56,7 @@ try {
 
 } catch (Exception $e) {
     echo json_encode([
-        "status" => "error",
+        "status" => "true",
         "message" => "Token verification failed",
         "error" => $e->getMessage()
     ]);

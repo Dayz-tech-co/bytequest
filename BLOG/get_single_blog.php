@@ -1,11 +1,11 @@
 <?php
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 header("Content-Type: application/json");
 
 // Validate the blog_id passed via GET
 if (!isset($_GET['blog_id']) || !is_numeric($_GET['blog_id'])) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Invalid or missing blog_id."
     ]);
     exit;
@@ -21,7 +21,7 @@ $blog_result = $blog_stmt->get_result();
 
 if ($blog_result->num_rows === 0) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Blog not found."
     ]);
     exit;
@@ -45,7 +45,7 @@ $blog['comments'] = $comments;
 
 // 4. Return blog with comments
 echo json_encode([
-    "status" => "success",
+    "status" => "true",
     "message" => "Blog and its comments fetched successfully.",
     "data" => $blog
 ]);

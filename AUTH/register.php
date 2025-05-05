@@ -1,5 +1,5 @@
 <?php 
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 header("Content-Type: application/json");
 
 
@@ -15,7 +15,7 @@ $username= clean_input($_POST["username"]);
 $role = clean_input($_POST["role"]);
 
 if (!$name || !$username || !$email || !$password || !$role){
-    echo json_encode(["status" => "error", "message" => "All fields are required."]);
+    echo json_encode(["status" => "false", "message" => "All fields are required."]);
     exit;
 }
 
@@ -26,7 +26,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0){
-    echo json_encode(["status" => "error", "message" => "Username or Email already exists."]);
+    echo json_encode(["status" => "false", "message" => "Username or Email already exists."]);
     exit;
 }
 
@@ -38,8 +38,8 @@ $stmt = $conn->prepare("INSERT INTO users (name, username, email, password, role
 $stmt->bind_param("sssss", $name, $username, $email, $hashedPassword, $role);
 
 if ($stmt->execute()){
-    echo json_encode(["status" => "success", "message" => "User registered successfully."]);
+    echo json_encode(["status" => "true", "message" => "User registered successfully."]);
 } else {
-    echo json_encode(["status" => "error", "message" => "Registration failed."]);
+    echo json_encode(["status" => "false", "message" => "Registration failed."]);
 }
 ?>

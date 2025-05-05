@@ -1,5 +1,5 @@
 <?php 
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 header("Content-Type: application/json");
 
 // Get the data from the POST request
@@ -12,7 +12,7 @@ $image = clean_input($_POST["image"] ?? null);
 
 if (!$blog_id || !$title || !$content){
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "blog_id, title and content are required.",
     ]);
     exit;
@@ -38,12 +38,12 @@ if ($image === null) {
 // Execute the query
 if ($stmt->execute()) {
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Blog post updated successfully"
     ]);
 } else {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to update the blog post"
     ]);
 }

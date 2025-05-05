@@ -1,5 +1,5 @@
 <?php
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 header("Content-Type: application/json");
 
 // Sanitize & get page/limit from query parameters
@@ -26,7 +26,7 @@ if ($stmt->execute()) {
     $totalPages = ceil($totalBlogs / $limit);
 
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Blogs fetched successfully.",
         "current_page" => $page,
         "per_page" => $limit,
@@ -36,7 +36,7 @@ if ($stmt->execute()) {
     ]);
 } else {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to fetch blogs."
     ]);
 }

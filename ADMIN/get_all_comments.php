@@ -1,5 +1,5 @@
 <?php
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 
 header("Content-Type: application/json");
 
@@ -27,7 +27,7 @@ if ($stmt->execute()) {
 
     // Step 4: Send JSON response
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Comments fetched successfully.",
         "current_page" => $page,
         "per_page" => $limit,
@@ -38,7 +38,7 @@ if ($stmt->execute()) {
 } else {
     // Step 5: Handle execution failure
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "Failed to fetch comments."
     ]);
 }

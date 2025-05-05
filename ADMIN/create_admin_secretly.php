@@ -1,5 +1,5 @@
 <?php
-require_once '../CONFIG/bytequest_db.php';
+require_once '../CONFIG/bootstrap.php';
 header("Content-Type: application/json");
 require_once '../CONFIG/bootstrap.php';
 
@@ -11,7 +11,7 @@ require_once '../CONFIG/bootstrap.php';
 $key = $_GET['key'] ?? null;
 
 if ($key !== $secret_key) {
-    echo json_encode(["status" => "error", "message" => "Unauthorized access"]);
+    echo json_encode(["status" => "false", "message" => "Unauthorized access"]);
     exit;
 }
 // Allowing just my device to run the script
@@ -39,7 +39,7 @@ $check->execute();
 $result = $check->get_result();
 
 if ($result->num_rows > 0) {
-    echo json_encode(["status" => "error", "message" => "Admin already exists"]);
+    echo json_encode(["status" => "false", "message" => "Admin already exists"]);
     exit;
 }
 
@@ -48,8 +48,8 @@ $stmt = $conn->prepare("INSERT INTO admins (name, email, password, role) VALUES 
 $stmt->bind_param("ssss", $name, $email, $password, $role);
 
 if ($stmt->execute()) {
-    echo json_encode(["status" => "success", "message" => "Admin created successfully"]);
+    echo json_encode(["status" => "true", "message" => "Admin created successfully"]);
 } else {
-    echo json_encode(["status" => "error", "message" => "Failed to create admin"]);
+    echo json_encode(["status" => "false", "message" => "Failed to create admin"]);
 }
 ?>

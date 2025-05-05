@@ -1,5 +1,5 @@
 <?php
-include "../CONFIG/bytequest_db.php";
+include "./CONFIG/bootstrap.php";
 
 header("Content-Type: application/json");
 
@@ -11,7 +11,7 @@ $comment_id = clean_input($data['comment_id'] ?? null); // Retrieve the comment 
 // Check if comment_id is provided
 if (!$comment_id) {
     echo json_encode([
-        "status" => "error",
+        "status" => "false",
         "message" => "comment_id is required."
     ]);
     exit;
@@ -24,12 +24,12 @@ $stmt->bind_param("i", $comment_id);
 // Execute the query
 if ($stmt->execute()) {
     echo json_encode([
-        "status" => "success",
+        "status" => "true",
         "message" => "Comment deleted successfully."
     ]);
 } else {
     echo json_encode([
-        "status" => "error",
+        "status" => "fail",
         "message" => "Failed to delete comment."
     ]);
 }

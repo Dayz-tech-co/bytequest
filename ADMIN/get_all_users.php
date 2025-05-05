@@ -1,5 +1,5 @@
 <?php
-require_once '../CONFIG/bytequest_db.php';
+require_once './CONFIG/bootstrap.php';
 require_once '../CONFIG/jwt_helper.php';
 
 header("Content-Type: application/json");
@@ -65,7 +65,7 @@ $totalPages = ceil($totalUsers / $limit);
 
 // 8. Respond with data
 echo json_encode([
-    "status" => "success",
+    "status" => "false",
     "message" => "Users fetched successfully",
     "current_page" => $page,
     "per_page" => $limit,

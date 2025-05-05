@@ -1,5 +1,5 @@
 <?php
-require_once '../CONFIG/bytequest_db.php';
+require_once './CONFIG/bootstrap.php';
 require_once '../CONFIG/jwt_helper.php';
 
 $headers = apache_request_headers();
@@ -10,11 +10,13 @@ if (!$decoded || $decoded['role'] !== 'admin') {
     echo json_encode(["error" => "Unauthorized"]);
     exit;
 }
-
+function clean_input($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
 $admin_id = $decoded['admin_id'];
 
 // Validate user_id to delete
-$user_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : null;
+$user_id = isset($_POST['user_id']) ? clean_input((int)$_POST['user_id'] ): null;
 
 if (!$user_id) {
     echo json_encode(["error" => "User ID is required"]);
