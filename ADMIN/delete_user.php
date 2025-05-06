@@ -1,7 +1,5 @@
 <?php
-require_once './CONFIG/bootstrap.php';
-require_once '../CONFIG/jwt_helper.php';
-require_once "../CONFIG/functions.php";
+require_once "../CONFIG/bootstrap.php";
 
 $headers = apache_request_headers();
 $token = str_replace('Bearer ', '', $headers['Authorization'] ?? '');

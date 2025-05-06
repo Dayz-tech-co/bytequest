@@ -1,6 +1,6 @@
 <?php
-include "./CONFIG/bootstrap.php";
-require_once "../CONFIG/functions.php";
+require_once "../CONFIG/bootstrap.php";
+
 header("Content-Type: application/json");
 
 // Get blog_id from the request

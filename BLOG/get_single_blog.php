@@ -1,5 +1,6 @@
 <?php
-include "./CONFIG/bootstrap.php";
+require_once "../CONFIG/bootstrap.php";
+
 header("Content-Type: application/json");
 
 // Validate the blog_id passed via GET

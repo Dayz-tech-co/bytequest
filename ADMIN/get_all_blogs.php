@@ -1,5 +1,6 @@
 <?php
-include "./CONFIG/bootstrap.php";
+require_once "../CONFIG/bootstrap.php";
+
 header("Content-Type: application/json");
 
 $headers = apache_request_headers();

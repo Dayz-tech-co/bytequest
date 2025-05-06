@@ -16,4 +16,6 @@ if ($conn->connect_error){
     exit;
 }
 
+require_once __DIR__ . "/functions.php";
+require_once __DIR__. "/jwt_helper.php";
 ?>
