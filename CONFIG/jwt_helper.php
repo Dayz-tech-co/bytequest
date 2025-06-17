@@ -33,3 +33,6 @@ function decode_jwt($token) {
         return ['error' => $e->getMessage()]; // Optional: return error for debugging
     }
 }
+
+?>
+
